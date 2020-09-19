@@ -13,15 +13,15 @@ int main (int argc, char* argv[]){
 
 	pid_t childpid = 0;
 
-	while((opt = getopt(argc, argv, "n:h")) != -1)
+
+
+
+	while((opt = getopt(argc, argv, "n")) != -1)
 	switch (opt) {
 		case 'n':
 			//
 			//
 			break;
-		case 'h':
-			printf("help blah blah");
-			break;		
 
 	}	
 
