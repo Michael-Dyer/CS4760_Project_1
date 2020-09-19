@@ -1,22 +1,14 @@
-
 CC = gcc
-CFLAGS = -g 
 
-OBJS=
-OBJS2=
-OBJS3=
+all: proc_fan testsim
 
-all: proc_fan runsim testsim
+proc_fan: proc_fan.c
+	$(CC) -o proc_fan proc_fan.c 
 
-proc_fan:$(OBJS)
-	$(CC) $(CFLAGS) -o $@ $(OBJS) 
 
-runsim:$(OBJS2)
-	$(CC) $(CFLAGS) -o $@ $(OBJS2) 
-
-testsim:$(OBJS3) 
-	$(CC) $(CFLAGS) -c 
+testsim: testsim.c 
+	$(CC) -o testsim testsim.c 
 
 
 clean:
-	rm -f *.o
+	rm *.o proc_fan testsim
