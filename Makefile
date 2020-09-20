@@ -11,4 +11,4 @@ testsim: testsim.c
 
 
 clean:
-	rm *.o proc_fan testsim
+	rm proc_fan testsim

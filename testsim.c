@@ -16,7 +16,7 @@ int main (int argc, char* argv[]){
 	printf(argv[1]);
 	printf("\n");
 	printf(argv[2]);
-
+	printf("\n\n");
 
 
 
