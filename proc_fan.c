@@ -12,7 +12,7 @@
 #endif
 
 
-char** make_execv_arr(char* str);
+char** make_execv_arr(char* line);
 
 int main (int argc, char* argv[]){
 	int pr_limit = 4; //max children proc allowed at once
@@ -23,7 +23,7 @@ int main (int argc, char* argv[]){
 	pid_t childpid = 0;
 	int status;
 
-	char* execv_arr; //array arg passed to execv to run process
+	char** execv_arr; //array arg passed to execv to run process
 
 	while((opt = getopt(argc, argv, "n:h")) != -1)
 	switch (opt) {
@@ -54,9 +54,42 @@ int main (int argc, char* argv[]){
 	//reads std in (from book)
 	
 	while(fgets(cmd, MAX_CANON, stdin) != NULL){
-		printf(cmd)	;
-	}
+		
+		execv_arr = make_execv_arr(cmd);
+	
+		//execv_arr works correctly at this point. Next 
+		//step is to get forks working correctly
+		//if ((childpid = fork()) == 0){
+		//	execvp(execv_arr[0], execv_arr);//executes cmd
+
+		//}
+	
+		
+	}//end of while loop
 	
 
 return 0;
+}
+
+//takes line from cmd and returns an array for execv
+char** make_execv_arr(char* line){
+	char *token;
+
+	char** exe_arr = malloc(MAX_CANON * sizeof(char *));
+	
+	token = strtok(line, " ");//splits into tokens
+
+	int arr_pos = 0;
+	while (token != NULL) {
+		//printf(" %s\n", token);
+		exe_arr[arr_pos] = malloc(30);//longest string allowed	
+		exe_arr[arr_pos] = token;
+		
+		arr_pos++;	
+		token = strtok(NULL, " ");//shifts to next token
+	}
+	
+	exe_arr[arr_pos] = NULL; //make last char NULL to work with execv
+	return exe_arr;
+
 }
