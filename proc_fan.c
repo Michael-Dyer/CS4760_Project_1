@@ -6,6 +6,7 @@
 #include <getopt.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <errno.h>
 
 #ifndef MAX_CANON
 #define MAX_CANON 8192
@@ -41,7 +42,7 @@ int main (int argc, char* argv[]){
 
 
 	if (pr_limit < 1){
-		perror("Error: pr_limit (set with -n flag) must be larger than 0"); 
+		printf("stderr, %s: Error: pr_limit (set with -n flag) must be larger than 0", argv[0], strerror(errno));
 		return -1;
 	}
 	
@@ -63,7 +64,7 @@ int main (int argc, char* argv[]){
     	if ((childpid = fork()) == 0 ){
 			printf ( "pr_count is %d \n", pr_count);
         	if (execv( execv_arr[0], execv_arr ) == -1){
-				perror("Error: failed to execute command"); //make sure execv works
+				fprintf(stderr, "%s: Error: failed to execute command", argv[0], strerror(errno));
 			}
 		}
     	else
@@ -71,7 +72,7 @@ int main (int argc, char* argv[]){
 
 		
 	if (childpid < 0) {
-		perror("Error: fork() failed");
+		fprintf(stderr, "%s: Error: fork() failed", argv[0], strerror(errno));
 		return -1;
 	}	
 	
