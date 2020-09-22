@@ -12,7 +12,7 @@
 #endif
 
 
-char** make_execv_arr(char* line);
+char** make_execv_arr(char *line);
 
 int main (int argc, char* argv[]){
 	int pr_limit = 4; //max children proc allowed at once
@@ -38,41 +38,60 @@ int main (int argc, char* argv[]){
 			return 0;//exit if help is used
 		}
 
-	//this code will fork ls from program
-	/*
-    char *args[2];
+	//if (argc < 2) {
+	//	perror("Error: needs at least 1 argument");
+	//	return -1;
+	//}
 
-    args[0] = "/bin/ls";        // first arg is the full path to the executable
-    args[1] = NULL;             // list of args must be NULL terminated
-
-    if ( fork() == 0 )
-        execv( args[0], args ); // child: call execv with the path and the args
-    else
-        wait( &status );    	
-	*/ 			
+	if (pr_limit < 1){
+		perror("Error: pr_limit (set with -n flag) must be larger than 0"); 
+		return -1;
+	}
 	
-	//reads std in (from book)
-	
+	//reads std in line by line(from book)
 	while(fgets(cmd, MAX_CANON, stdin) != NULL){
-		
+			
+		//this function converts lines into array of words
+		//for execv to call	
 		execv_arr = make_execv_arr(cmd);
-	
-		//execv_arr works correctly at this point. Next 
-		//step is to get forks working correctly
-		//if ((childpid = fork()) == 0){
-		//	execvp(execv_arr[0], execv_arr);//executes cmd
 
-		//}
+		//wait untill pr_limit isn't filled and decrement	
+		if (pr_count == pr_limit) {
+			printf("waiting until pr_count != pr_limit\n");
+			wait(NULL);
+			pr_count--;
+		}
 	
+
+    	if ((childpid = fork()) == 0 ){
+			printf ( "%d is \n", pr_count);
+        	execv( execv_arr[0], execv_arr ); // child: call execv with the path and the args
+		}
+    	else
+        	wait( &status );    	
+
 		
-	}//end of while loop
+	if (childpid < 0) {
+		perror("Error: fork() failed");
+		return -1;
+	}	
 	
+	pr_count++;
+
+	if (waitpid(-1, NULL, WNOHANG) > 0) {
+		pr_count--;
+	}	
+
+	
+	}//end of while loop
 
 return 0;
 }
 
+
+
 //takes line from cmd and returns an array for execv
-char** make_execv_arr(char* line){
+char** make_execv_arr(char *line){
 	char *token;
 
 	char** exe_arr = malloc(MAX_CANON * sizeof(char *));
