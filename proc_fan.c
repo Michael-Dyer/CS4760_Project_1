@@ -22,6 +22,7 @@ int main (int argc, char* argv[]){
 	
 	pid_t childpid = 0;
 	int status;
+	
 
 	char** execv_arr; //array arg passed to execv to run process
 
@@ -38,10 +39,6 @@ int main (int argc, char* argv[]){
 			return 0;//exit if help is used
 		}
 
-	//if (argc < 2) {
-	//	perror("Error: needs at least 1 argument");
-	//	return -1;
-	//}
 
 	if (pr_limit < 1){
 		perror("Error: pr_limit (set with -n flag) must be larger than 0"); 
@@ -62,10 +59,12 @@ int main (int argc, char* argv[]){
 			pr_count--;
 		}
 	
-
+		//fork off
     	if ((childpid = fork()) == 0 ){
-			printf ( "%d is \n", pr_count);
-        	execv( execv_arr[0], execv_arr ); // child: call execv with the path and the args
+			printf ( "pr_count is %d \n", pr_count);
+        	if (execv( execv_arr[0], execv_arr ) == -1){
+				perror("Error: failed to execute command"); //make sure execv works
+			}
 		}
     	else
         	wait( &status );    	

@@ -1,1 +1,10 @@
 Project 1 for 4760
+
+To run program, exectute; proc_fan [-n n] < proces_list
+n here is max number of processes running at once
+n default will be 4
+
+
+This project is based on exercise 3.9 in the book. Its a process fan
+structure that runs batch processes. This project differs from the book because
+the user can set the pr_limit using the n option
